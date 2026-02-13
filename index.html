@@ -1,30 +1,143 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Rent vs Own (Index Fund Equity Comparison)</title>
   <style>
-    :root { color-scheme: light; }
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 18px; }
-    h1 { margin: 0 0 12px; font-size: 22px; }
-    .grid { display: grid; grid-template-columns: 380px 1fr; gap: 16px; align-items: start; }
-    .card { border: 1px solid #ddd; border-radius: 12px; padding: 14px; box-shadow: 0 1px 2px rgba(0,0,0,.04); background: #fff; }
-    .row { display: grid; grid-template-columns: 1fr 160px; gap: 10px; align-items: center; margin: 10px 0; }
-    label { font-size: 13px; color: #222; }
-    input[type="text"], input[type="number"], select {
-      width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 10px; background: #fff;
+    :root {
+      color-scheme: light;
     }
-    input[type="range"] { width: 100%; }
-    .muted { color: #555; font-size: 12px; }
-    .kpis { display: grid; grid-template-columns: repeat(3, minmax(180px, 1fr)); gap: 10px; }
-    .kpi { border: 1px solid #eee; border-radius: 12px; padding: 10px; }
-    .kpi .t { font-size: 12px; color: #666; }
-    .kpi .v { font-size: 18px; font-weight: 700; margin-top: 4px; }
-    .kpi .s { font-size: 12px; color: #666; margin-top: 4px; line-height: 1.25; }
-    canvas { width: 100% !important; height: 420px !important; }
-    .pill { display:inline-block; padding:2px 8px; border:1px solid #ddd; border-radius:999px; font-size:12px; margin-left:6px; }
-    .btnRow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      margin: 18px;
+      background: #fff;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 22px;
+    }
+
+    /* Layout */
+    .grid {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 16px;
+      align-items: start;
+      max-width: 1200px;
+    }
+
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
+      background: #fff;
+      min-width: 0;
+      /* helps prevent overflow on small screens */
+    }
+
+    /* Form rows */
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 160px;
+      gap: 10px;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+    label {
+      font-size: 13px;
+      color: #222;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 10px 10px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background: #fff;
+      font-size: 14px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+    }
+
+    .muted {
+      color: #555;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    /* KPI + Chart */
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .kpi {
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 10px;
+      background: #fff;
+    }
+
+    .kpi .t {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .kpi .v {
+      font-size: 18px;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .kpi .s {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+      line-height: 1.25;
+    }
+
+    /* Chart responsiveness */
+    .chartWrap {
+      margin-top: 14px;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 420px !important;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border: 1px solid #ddd;
+      border-radius: 999px;
+      font-size: 12px;
+      margin-left: 6px;
+      white-space: nowrap;
+    }
+
+    .btnRow {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
     .btn {
       width: 100%;
       padding: 10px 12px;
@@ -33,14 +146,87 @@
       background: #f7f7f7;
       cursor: pointer;
       font-weight: 600;
+      font-size: 14px;
     }
-    .btn.primary { background: #111; color: #fff; border-color: #111; }
-    .btn:active { transform: translateY(1px); }
-    .mini { font-size: 12px; color:#666; margin-top: 6px; line-height: 1.3; }
-    hr { border:none;border-top:1px solid #eee;margin:14px 0; }
-    @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
+
+    .btn.primary {
+      background: #111;
+      color: #fff;
+      border-color: #111;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .mini {
+      font-size: 12px;
+      color: #666;
+      margin-top: 6px;
+      line-height: 1.3;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 14px 0;
+    }
+
+    /* ---------- Responsive breakpoints ---------- */
+
+    /* Stack columns on tablets/phones */
+    @media (max-width: 980px) {
+      body {
+        margin: 14px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      canvas {
+        height: 360px !important;
+      }
+    }
+
+    /* KPI cards: 2 columns */
+    @media (max-width: 760px) {
+      .kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      canvas {
+        height: 320px !important;
+      }
+    }
+
+    /* Make form rows label-on-top for small phones */
+    @media (max-width: 520px) {
+      h1 {
+        font-size: 20px;
+      }
+
+      .row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+        align-items: stretch;
+      }
+
+      .btnRow {
+        grid-template-columns: 1fr;
+      }
+
+      .kpis {
+        grid-template-columns: 1fr;
+      }
+
+      canvas {
+        height: 280px !important;
+      }
+    }
   </style>
 </head>
+
 <body>
   <h1>Rent vs Own — compare home equity to index-fund investing</h1>
 
@@ -59,7 +245,6 @@
         <input id="downPct" type="range" min="0" max="100" step="1" value="20">
       </div>
 
-      <!-- NEW: Rental income -->
       <div class="row">
         <label>Rental income ($ / mo)</label>
         <input id="rentalIncome" type="text" inputmode="numeric" value="0" aria-label="Rental income monthly">
@@ -180,12 +365,12 @@
         </div>
       </div>
 
-      <div style="margin-top:14px;">
+      <div class="chartWrap">
         <canvas id="chart"></canvas>
       </div>
 
-      <div class="mini" style="margin-top:10px;color:#666;">
-        (This is a simplified model: no PMI, no taxes, no selling costs, no refinance, no itemized deductions.)
+      <div class="mini" style="margin-top:10px;">
+        (Simplified: no PMI, no taxes, no selling costs, no refinance, no itemized deductions.)
       </div>
     </div>
   </div>
@@ -236,8 +421,8 @@
 
     const PRESETS = {
       conservative: { indexReturn: 5.0, homeApp: 2.0, rentInfl: 2.5, hint: "Conservative sets: index 5.0%, home 2.0%, rent infl. 2.5%." },
-      moderate:     { indexReturn: 7.0, homeApp: 3.0, rentInfl: 3.0, hint: "Moderate sets: index 7.0%, home 3.0%, rent infl. 3.0%." },
-      aggressive:   { indexReturn: 9.0, homeApp: 4.0, rentInfl: 3.5, hint: "Aggressive sets: index 9.0%, home 4.0%, rent infl. 3.5%." }
+      moderate: { indexReturn: 7.0, homeApp: 3.0, rentInfl: 3.0, hint: "Moderate sets: index 7.0%, home 3.0%, rent infl. 3.0%." },
+      aggressive: { indexReturn: 9.0, homeApp: 4.0, rentInfl: 3.5, hint: "Aggressive sets: index 9.0%, home 4.0%, rent infl. 3.5%." }
     };
 
     function setPreset(name) {
@@ -290,7 +475,7 @@
         params.homeInsMonthly +
         maintMonthly +
         params.hoaMonthly -
-        params.rentalIncomeMonthly; // subtract income
+        params.rentalIncomeMonthly;
 
       return { total, propTaxMonthly, maintMonthly };
     }
@@ -339,7 +524,7 @@
         const ownerMonthlyCost =
           mortPmt + propTaxMonthly + homeInsMonthly + maintMonthly + hoaMonthly - rentalIncomeThisMonth;
 
-        const diff = ownerMonthlyCost - rentThisMonth; // positive => owning costs more
+        const diff = ownerMonthlyCost - rentThisMonth;
         if (diff > 0) renterInvest += diff;
         else ownerInvest += (-diff);
 
@@ -397,13 +582,11 @@
 
       const out = simulate(params);
 
-      // owning-cost box (today)
       const own0 = initialOwnerMonthlyCost(params, out.mortPmt);
       $("ownMonthlyCost").textContent = money(own0.total) + "/mo";
       $("ownMonthlyCostDetail").textContent =
         `P&I ${money(out.mortPmt)} + tax ${money(own0.propTaxMonthly)} + ins ${money(params.homeInsMonthly)} + maint ${money(own0.maintMonthly)} + HOA ${money(params.hoaMonthly)} − rent ${money(params.rentalIncomeMonthly)}`;
 
-      // KPIs
       $("ownerNW").textContent = money(out.ownerNWEnd);
       $("ownerDetail").textContent = `Equity: ${money(out.ownerEquityEnd)} • Index fund: ${money(out.ownerInvestEnd)}`;
 
@@ -415,7 +598,6 @@
       $("diffDetail").textContent =
         `Down: ${money(out.down)} • Closing: ${money(out.closing)} • Loan: ${money(out.loan)} • P&I: ${money(out.mortPmt)}/mo`;
 
-      // Chart
       const data = {
         labels: out.series.labels,
         datasets: [
@@ -476,16 +658,15 @@
       rebuild();
     }
 
-    // ---- Events ----
-    ["housePrice","rentMonthly","rentalIncome"].forEach(id => {
+    ["housePrice", "rentMonthly", "rentalIncome"].forEach(id => {
       $(id).addEventListener("blur", () => { formatMoneyInput($(id)); rebuild(); });
       $(id).addEventListener("input", rebuild);
     });
 
-    ["downPct","mortRate","mortYears","propTax","homeIns","maint","hoa","closing","horizonYears"]
+    ["downPct", "mortRate", "mortYears", "propTax", "homeIns", "maint", "hoa", "closing", "horizonYears"]
       .forEach(id => $(id).addEventListener("input", rebuild));
 
-    ["indexReturn","homeApp","rentInfl"].forEach(id => {
+    ["indexReturn", "homeApp", "rentInfl"].forEach(id => {
       $(id).addEventListener("input", () => { markCustomPreset(); rebuild(); });
     });
 
@@ -498,8 +679,8 @@
     $("resetBtn").addEventListener("click", resetDefaults);
     $("moderateBtn").addEventListener("click", () => setPreset("moderate"));
 
-    // init
     resetDefaults();
   </script>
 </body>
+
 </html>
