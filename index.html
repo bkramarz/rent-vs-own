@@ -25,7 +25,6 @@
       font-size: 22px;
     }
 
-    /* Layout */
     .grid {
       display: grid;
       grid-template-columns: 380px 1fr;
@@ -41,13 +40,11 @@
       box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
       background: #fff;
       min-width: 0;
-      /* helps prevent overflow on small screens */
     }
 
-    /* Form rows */
     .row {
       display: grid;
-      grid-template-columns: 1fr 160px;
+      grid-template-columns: 1fr 170px;
       gap: 10px;
       align-items: center;
       margin: 10px 0;
@@ -79,11 +76,14 @@
       line-height: 1.35;
     }
 
-    /* KPI + Chart */
-    .kpis {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(180px, 1fr));
-      gap: 10px;
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border: 1px solid #ddd;
+      border-radius: 999px;
+      font-size: 12px;
+      margin-left: 6px;
+      white-space: nowrap;
     }
 
     .kpi {
@@ -111,7 +111,106 @@
       line-height: 1.25;
     }
 
-    /* Chart responsiveness */
+    .rightTop {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Clean side-by-side comparison */
+    .compareCard {
+      border: 1px solid #eee;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .compareHeader {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: #fafafa;
+      border-bottom: 1px solid #eee;
+    }
+
+    .compareHeader div {
+      padding: 10px 12px;
+      font-weight: 900;
+      font-size: 13px;
+    }
+
+    .compareBody {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .col {
+      padding: 10px 12px;
+    }
+
+    .col+.col {
+      border-left: 1px solid #eee;
+    }
+
+    .colTitle {
+      display: none;
+      /* shown on mobile */
+      font-weight: 900;
+      font-size: 13px;
+      margin: 2px 0 10px;
+    }
+
+    .metricRow {
+      padding: 10px 0;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .metricRow:first-child {
+      border-top: none;
+    }
+
+    .metricRow .t {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .metricRow .v {
+      font-size: 16px;
+      font-weight: 900;
+      margin-top: 3px;
+    }
+
+    .metricRow .s {
+      font-size: 12px;
+      color: #777;
+      margin-top: 3px;
+      line-height: 1.25;
+    }
+
+    .diffCard {
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .diffCard .t {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .diffCard .v {
+      font-size: 18px;
+      font-weight: 900;
+      margin-top: 4px;
+    }
+
+    .diffCard .s {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+      line-height: 1.25;
+    }
+
     .chartWrap {
       margin-top: 14px;
     }
@@ -119,16 +218,6 @@
     canvas {
       width: 100% !important;
       height: 420px !important;
-    }
-
-    .pill {
-      display: inline-block;
-      padding: 2px 8px;
-      border: 1px solid #ddd;
-      border-radius: 999px;
-      font-size: 12px;
-      margin-left: 6px;
-      white-space: nowrap;
     }
 
     .btnRow {
@@ -159,22 +248,19 @@
       transform: translateY(1px);
     }
 
-    .mini {
-      font-size: 12px;
-      color: #666;
-      margin-top: 6px;
-      line-height: 1.3;
-    }
-
     hr {
       border: none;
       border-top: 1px solid #eee;
       margin: 14px 0;
     }
 
-    /* ---------- Responsive breakpoints ---------- */
+    .mini {
+      font-size: 12px;
+      color: #666;
+      margin-top: 8px;
+      line-height: 1.3;
+    }
 
-    /* Stack columns on tablets/phones */
     @media (max-width: 980px) {
       body {
         margin: 14px;
@@ -189,10 +275,30 @@
       }
     }
 
-    /* KPI cards: 2 columns */
-    @media (max-width: 760px) {
-      .kpis {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    /* FIX: Mobile headings — hide shared header, show per-column titles */
+    @media (max-width: 700px) {
+      .compareHeader {
+        display: none;
+      }
+
+      .compareBody {
+        grid-template-columns: 1fr;
+      }
+
+      .colTitle {
+        display: block;
+      }
+
+      .col {
+        border-top: 1px solid #eee;
+      }
+
+      .col:first-child {
+        border-top: none;
+      }
+
+      .col+.col {
+        border-left: none;
       }
 
       canvas {
@@ -200,7 +306,6 @@
       }
     }
 
-    /* Make form rows label-on-top for small phones */
     @media (max-width: 520px) {
       h1 {
         font-size: 20px;
@@ -216,10 +321,6 @@
         grid-template-columns: 1fr;
       }
 
-      .kpis {
-        grid-template-columns: 1fr;
-      }
-
       canvas {
         height: 280px !important;
       }
@@ -231,6 +332,7 @@
   <h1>Rent vs Own — compare home equity to index-fund investing</h1>
 
   <div class="grid">
+    <!-- LEFT: inputs -->
     <div class="card">
       <div class="row">
         <label>House price ($)</label>
@@ -240,7 +342,9 @@
       <div class="row">
         <label>
           Down payment
-          <span class="pill"><span id="downPctLabel">20</span>%</span>
+          <span class="pill">
+            <span id="downPctLabel">20</span>% • <span id="downAmtLabel">$—</span>
+          </span>
         </label>
         <input id="downPct" type="range" min="0" max="100" step="1" value="20">
       </div>
@@ -338,6 +442,8 @@
         Assumption: whoever has the <b>lower monthly cost</b> invests the difference in the index fund each month.
         The renter also invests the down payment + closing costs they didn’t spend.
         Rental income is assumed to inflate with the same rate as rent inflation.
+        <br><br>
+        “Total paid for housing” includes: owner (down + closing + monthly net housing costs) vs renter (rent).
       </div>
 
       <div class="btnRow">
@@ -346,31 +452,89 @@
       </div>
     </div>
 
+    <!-- RIGHT: outputs -->
     <div class="card">
-      <div class="kpis">
-        <div class="kpi">
-          <div class="t">Owner net worth at horizon</div>
-          <div class="v" id="ownerNW">$—</div>
-          <div class="s" id="ownerDetail">—</div>
-        </div>
-        <div class="kpi">
-          <div class="t">Renter net worth at horizon</div>
-          <div class="v" id="renterNW">$—</div>
-          <div class="s" id="renterDetail">—</div>
-        </div>
-        <div class="kpi">
-          <div class="t">Difference (Owner − Renter)</div>
+      <div class="rightTop">
+        <div class="diffCard">
+          <div class="t">Difference (Owner − Renter) net worth</div>
           <div class="v" id="diffNW">$—</div>
           <div class="s" id="diffDetail">—</div>
         </div>
-      </div>
 
-      <div class="chartWrap">
-        <canvas id="chart"></canvas>
-      </div>
+        <div class="compareCard">
+          <div class="compareHeader">
+            <div>Owner</div>
+            <div>Renter</div>
+          </div>
 
-      <div class="mini" style="margin-top:10px;">
-        (Simplified: no PMI, no taxes, no selling costs, no refinance, no itemized deductions.)
+          <div class="compareBody">
+            <!-- Owner column -->
+            <div class="col">
+              <div class="colTitle">Owner</div>
+
+              <div class="metricRow">
+                <div class="t">Net worth</div>
+                <div class="v" id="ownerNW">$—</div>
+                <div class="s">House equity + market equity</div>
+              </div>
+
+              <div class="metricRow">
+                <div class="t">Equity in house</div>
+                <div class="v" id="ownerHouseEq">$—</div>
+                <div class="s">Home value − mortgage balance</div>
+              </div>
+
+              <div class="metricRow">
+                <div class="t">Equity in market</div>
+                <div class="v" id="ownerMktEq">$—</div>
+                <div class="s">Invested monthly savings vs renting</div>
+              </div>
+
+              <div class="metricRow">
+                <div class="t">Total paid for housing</div>
+                <div class="v" id="paidOwner">$—</div>
+                <div class="s">Down + closing + monthly net housing costs</div>
+              </div>
+            </div>
+
+            <!-- Renter column -->
+            <div class="col">
+              <div class="colTitle">Renter</div>
+
+              <div class="metricRow">
+                <div class="t">Net worth</div>
+                <div class="v" id="renterNW">$—</div>
+                <div class="s">Market equity only</div>
+              </div>
+
+              <div class="metricRow">
+                <div class="t">Equity in house</div>
+                <div class="v" id="renterHouseEq">$0</div>
+                <div class="s">No home ownership</div>
+              </div>
+
+              <div class="metricRow">
+                <div class="t">Equity in market</div>
+                <div class="v" id="renterMktEq">$—</div>
+                <div class="s">Down + closing + monthly savings invested</div>
+              </div>
+
+              <div class="metricRow">
+                <div class="t">Total paid for housing</div>
+                <div class="v" id="paidRenter">$—</div>
+                <div class="s">Sum of rent payments</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chartWrap">
+          <canvas id="chart"></canvas>
+        </div>
+
+        <div class="mini">
+          (Simplified: no PMI, no income taxes, no selling costs, no refinance, no itemized deductions.)
+        </div>
       </div>
     </div>
   </div>
@@ -507,6 +671,9 @@
       let homeValue = housePrice;
       let mortgageBalance = loan;
 
+      let totalPaidOwner = down + closing;
+      let totalPaidRenter = 0;
+
       const series = { labels: [], ownerNW: [], renterNW: [], ownerEquity: [] };
 
       for (let m = 1; m <= months; m++) {
@@ -523,6 +690,9 @@
 
         const ownerMonthlyCost =
           mortPmt + propTaxMonthly + homeInsMonthly + maintMonthly + hoaMonthly - rentalIncomeThisMonth;
+
+        totalPaidOwner += ownerMonthlyCost;
+        totalPaidRenter += rentThisMonth;
 
         const diff = ownerMonthlyCost - rentThisMonth;
         if (diff > 0) renterInvest += diff;
@@ -543,12 +713,19 @@
         }
       }
 
-      const ownerEquityEnd = series.ownerEquity[series.ownerEquity.length - 1];
-      const ownerNWEnd = series.ownerNW[series.ownerNW.length - 1];
-      const ownerInvestEnd = ownerNWEnd - ownerEquityEnd;
-      const renterNWEnd = series.renterNW[series.renterNW.length - 1];
+      const ownerEquity = series.ownerEquity[series.ownerEquity.length - 1];
+      const ownerNW = series.ownerNW[series.ownerNW.length - 1];
+      const ownerMkt = ownerNW - ownerEquity;
 
-      return { down, closing, loan, mortPmt, ownerNWEnd, renterNWEnd, ownerEquityEnd, ownerInvestEnd, series };
+      const renterNW = series.renterNW[series.renterNW.length - 1];
+
+      return {
+        down, closing, loan, mortPmt,
+        ownerNW, ownerEquity, ownerMkt,
+        renterNW, renterMkt: renterNW,
+        totalPaidOwner, totalPaidRenter,
+        series
+      };
     }
 
     let chart;
@@ -560,8 +737,12 @@
       const horizonYears = Number($("horizonYears").value);
       $("horizonLabel").textContent = horizonYears;
 
+      const housePrice = parseMoneyLike($("housePrice").value);
+      const downAmt = housePrice * (downPct / 100);
+      $("downAmtLabel").textContent = money(downAmt);
+
       const params = {
-        housePrice: parseMoneyLike($("housePrice").value),
+        housePrice,
         downPct,
         rentMonthly: parseMoneyLike($("rentMonthly").value),
         rentalIncomeMonthly: parseMoneyLike($("rentalIncome").value),
@@ -587,23 +768,31 @@
       $("ownMonthlyCostDetail").textContent =
         `P&I ${money(out.mortPmt)} + tax ${money(own0.propTaxMonthly)} + ins ${money(params.homeInsMonthly)} + maint ${money(own0.maintMonthly)} + HOA ${money(params.hoaMonthly)} − rent ${money(params.rentalIncomeMonthly)}`;
 
-      $("ownerNW").textContent = money(out.ownerNWEnd);
-      $("ownerDetail").textContent = `Equity: ${money(out.ownerEquityEnd)} • Index fund: ${money(out.ownerInvestEnd)}`;
+      // Owner column
+      $("ownerNW").textContent = money(out.ownerNW);
+      $("ownerHouseEq").textContent = money(out.ownerEquity);
+      $("ownerMktEq").textContent = money(out.ownerMkt);
+      $("paidOwner").textContent = money(out.totalPaidOwner);
 
-      $("renterNW").textContent = money(out.renterNWEnd);
-      $("renterDetail").textContent = `Starts invested: ${money(out.down + out.closing)} • Grows with monthly savings`;
+      // Renter column
+      $("renterNW").textContent = money(out.renterNW);
+      $("renterHouseEq").textContent = money(0);
+      $("renterMktEq").textContent = money(out.renterMkt);
+      $("paidRenter").textContent = money(out.totalPaidRenter);
 
-      const diff = out.ownerNWEnd - out.renterNWEnd;
+      // Difference card
+      const diff = out.ownerNW - out.renterNW;
       $("diffNW").textContent = money(diff);
       $("diffDetail").textContent =
         `Down: ${money(out.down)} • Closing: ${money(out.closing)} • Loan: ${money(out.loan)} • P&I: ${money(out.mortPmt)}/mo`;
 
+      // Chart
       const data = {
         labels: out.series.labels,
         datasets: [
-          { label: "Owner net worth (equity + investments)", data: out.series.ownerNW, borderWidth: 2, tension: 0.2 },
-          { label: "Renter net worth (index fund)", data: out.series.renterNW, borderWidth: 2, tension: 0.2 },
-          { label: "Owner home equity (subset)", data: out.series.ownerEquity, borderDash: [6, 5], borderWidth: 1.5, tension: 0.2 }
+          { label: "Owner net worth (house + market)", data: out.series.ownerNW, borderWidth: 2, tension: 0.2 },
+          { label: "Renter net worth (market)", data: out.series.renterNW, borderWidth: 2, tension: 0.2 },
+          { label: "Owner house equity", data: out.series.ownerEquity, borderDash: [6, 5], borderWidth: 1.5, tension: 0.2 }
         ]
       };
 
